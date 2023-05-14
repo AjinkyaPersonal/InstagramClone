@@ -33,7 +33,7 @@ public class UserService {
 
         if(user != null)
         {
-            throw new IllegalStateException("Patient already exists!!!!...sign in instead");
+            throw new IllegalStateException("Instagram user already exists!!!!...sign in instead");
         }
 
 //      encryption
@@ -50,7 +50,7 @@ public class UserService {
 
         userRepo.save(user);
 
-        return new SignUpOutput("Patient registered","Patient created successfully");
+        return new SignUpOutput("Instagram user registered","Instagram account created successfully");
 
     }
 

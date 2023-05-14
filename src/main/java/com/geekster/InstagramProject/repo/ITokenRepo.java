@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface ITokenRepo extends JpaRepository<AuthenticationToken , Long> {
     AuthenticationToken findFirstByToken(String token);
 
-    void deleteByToken(String token);
+
 }
