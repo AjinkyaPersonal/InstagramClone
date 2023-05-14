@@ -44,6 +44,7 @@ public class UserController {
         if(authService.authenticate(email,token))
         {
             authService.deleteToken(token);
+            msg = "Signout Successful";
             status = HttpStatus.OK;
 
         }
