@@ -26,11 +26,11 @@ public class Post {
 
     private String postCaption;
 
-    //add regex here
+
     private String location;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)// remove this ...not needed...why ??
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false , name = "fk_user_ID")
     private User user;
 

@@ -84,10 +84,8 @@ public class UserController {
         return new ResponseEntity<String>(msg , status);
     }
 
-    /**
-     *
-     * todo : add authentication pass email and token of myid : and perform authentication
-     */
+
+
     @PostMapping("/follow/{myId}/{otherId}")
     String followUser(@PathVariable Long myId, @PathVariable Long otherId)
     {

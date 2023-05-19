@@ -36,7 +36,7 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    @Past // check by testing/passing future date
+    @Past
     @NotNull
     private LocalDate dOB;
 

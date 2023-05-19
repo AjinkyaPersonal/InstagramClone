@@ -184,12 +184,9 @@ public class UserService {
 
         if(myUser!=null && otherUser!=null) {
 
-            //todo : check if already follows or not
 
-            //follow from my side
             followingService.saveFollowing(myUser,otherUser);
 
-            //follower from other side
             followerService.saveFollower(otherUser, myUser);
 
             return "Followed Successfully!!!!!";

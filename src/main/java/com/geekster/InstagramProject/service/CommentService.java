@@ -12,7 +12,7 @@ public class CommentService {
     @Autowired
     ICommentRepo commentRepo;
 
-    //definitely make use of authentication
+
     public String addComment(InstagramComment comment) {
         InstagramComment rComment = commentRepo.save(comment);
         if(rComment == null)
