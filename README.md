@@ -73,21 +73,53 @@ The Job data model is defined in the Job class, which has the following attribut
 Id : integer
 firstName : string
 lastName : string
-age : integer
+instagramName : string
+instagramBio : string
 email : string
 password : string
+dOB : LocalDate
 phoneNumber : string
+isBlueTicked : boolean
+```
+
+* PostLike Model
+```
+Id : Long
+post : Post(ManyToOne)
+User : user(ManyToOne)
 ```
 
 * Post Model
 ```
-postId = Long
-createdDate : Timestamp
-updatedDate : Timestamp
+postId = Integer
+createdDate : LocalDateTime
 postData : String
+postCaption : string
+location : string
 @ManyToOne
 user : User
+```
 
+* InstagramFollowing Model
+```
+followingTableId = Long
+user : User (OneToOne)
+following : User (OneToOne)
+```
+
+* InstagramFollower Model
+```
+followerTableId = Long
+user : User (OneToOne)
+follower : User (OneToOne)
+```
+
+* InstagramComment Model
+```
+commentId = Long
+commentBody : String
+post : Post(ManyToOne)
+user : User (ManyToOne)
 ```
 
 * Authentication Token 
@@ -97,6 +129,15 @@ token : string
 tokenCreationDate : LocalDate
 @OneToOne 
 user : User
+```
+
+* Admin Token 
+```
+adminId : Long
+firstName : string
+lastName : string
+email : string
+
 ```
 ## Data Flow
 
@@ -122,12 +163,25 @@ POST /user/signup: create a new user account
 POST /user/signin: authenticate a user and receive an authentication token
 PUT /user: update user details
 DELETE /user/signout: authenticate a user and delete authentication token
+POST /user/like - like the post
+POST //follow/{myId}/{otherId} - to follow the user
 ```
 
 * Post Controller
 ```
 POST /post: create a new post
 GET /post: get all posts
+GET /{postId}/likeCount : get likeCount based on postId.
+```
+
+* Admin Controller
+```
+PUT /user/{id}/{blueTick}: update the blue ticket
+```
+
+* Comment Controller
+```
+POST /comment: post the comment
 ```
 
 <br>
