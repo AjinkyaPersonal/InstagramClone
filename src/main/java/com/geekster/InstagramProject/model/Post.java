@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -17,16 +17,20 @@ public class Post {
     private Integer postId;
 
     @Column(nullable = false)
-    private Timestamp createdDate;
+    private LocalDateTime createdDate;
 
-    @Column(nullable = false)
-    private Timestamp updatedDate;
 
     @Column(nullable = false)
     @NotEmpty
     private String postData;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    private String postCaption;
+
+    //add regex here
+    private String location;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)// remove this ...not needed...why ??
     @JoinColumn(nullable = false , name = "fk_user_ID")
     private User user;
 

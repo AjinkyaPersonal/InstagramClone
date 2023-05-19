@@ -2,12 +2,13 @@ package com.geekster.InstagramProject.service;
 
 import com.geekster.InstagramProject.dto.SignInInput;
 import com.geekster.InstagramProject.dto.SignInOutput;
-import com.geekster.InstagramProject.dto.SignUpInput;
 import com.geekster.InstagramProject.dto.SignUpOutput;
 import com.geekster.InstagramProject.model.AuthenticationToken;
+import com.geekster.InstagramProject.model.PostLike;
 import com.geekster.InstagramProject.model.User;
 import com.geekster.InstagramProject.repo.ITokenRepo;
 import com.geekster.InstagramProject.repo.IUserRepo;
+import jakarta.transaction.Transactional;
 import jakarta.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,10 +25,24 @@ public class UserService {
     IUserRepo userRepo;
 
     @Autowired
+    PostService postService;
+
+    @Autowired
     ITokenRepo tokenRepo;
 
+    @Autowired
+    FollowingService followingService;
+
+    @Autowired
+    FollowerService followerService;
+
+    @Autowired
+    LikeService likeService;
+
     @Autowired TokenService tokenService;
-    public SignUpOutput signUp(SignUpInput signUpDto) {
+    public SignUpOutput signUp(User signUpDto) {
+
+
         //check if user exists or not based on email
         User user = userRepo.findFirstByEmail(signUpDto.getEmail());
 
@@ -44,11 +59,8 @@ public class UserService {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
-        user = new User(signUpDto.getFirstName(), signUpDto.getLastName(),
-                encryptedPassword , signUpDto.getAge() , signUpDto.getEmail(), signUpDto.getPhoneNumber());
-
-        userRepo.save(user);
+        signUpDto.setPassword(encryptedPassword);
+        userRepo.save(signUpDto);
 
         return new SignUpOutput("Instagram user registered","Instagram account created successfully");
 
@@ -128,10 +140,6 @@ public class UserService {
             originalUser.setPassword(encryptedPassword);
         }
 
-        if(user.getAge()!=null){
-            originalUser.setAge(user.getAge());
-        }
-
         if((user.getPhoneNumber()!=null)){
             Pattern p = Pattern.compile("\\d{2}-\\d{10}");
 
@@ -163,4 +171,52 @@ public class UserService {
 
 
     }
+
+    @Transactional
+    public String followUser(Long myId, Long otherId) {
+
+        if(myId == otherId)
+        {
+            return "Cant follow yourself!!!!";
+        }
+       User myUser = userRepo.findByUserId(myId);
+       User otherUser = userRepo.findByUserId(otherId);
+
+        if(myUser!=null && otherUser!=null) {
+
+            //todo : check if already follows or not
+
+            //follow from my side
+            followingService.saveFollowing(myUser,otherUser);
+
+            //follower from other side
+            followerService.saveFollower(otherUser, myUser);
+
+            return "Followed Successfully!!!!!";
+        }
+        else
+        {
+            return "Users are invalid!!!";
+        }
+    }
+
+    public String toggleBlueTick(Long id, boolean blueTick) {
+        User user = userRepo.findByUserId(id);
+
+        if(user!=null) {
+           user.setBlueTicked(blueTick);
+           userRepo.save(user);
+            return "Blue tick was set to.." + blueTick;
+        }
+        else
+        {
+            return "user doesn't exist";
+        }
+
+    }
+
+    public void like(PostLike postLike) {
+        likeService.like(postLike);
+    }
+
 }
