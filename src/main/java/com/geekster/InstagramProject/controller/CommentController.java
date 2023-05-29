@@ -19,6 +19,7 @@ public class CommentController {
    @PostMapping()
    String addComment(@RequestBody InstagramComment comment)
    {
+
        return commentService.addComment(comment);
    }
 }

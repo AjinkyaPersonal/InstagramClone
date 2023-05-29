@@ -30,6 +30,8 @@ public class Post {
     private String location;
 
 
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false , name = "fk_user_ID")
     private User user;

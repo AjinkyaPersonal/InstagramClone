@@ -1,5 +1,6 @@
 package com.geekster.InstagramProject.controller;
 
+import com.geekster.InstagramProject.dto.PostOutput;
 import com.geekster.InstagramProject.model.Post;
 import com.geekster.InstagramProject.model.User;
 import com.geekster.InstagramProject.service.PostService;
@@ -44,9 +45,9 @@ public class PostController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Post>> getAllPosts(@RequestParam String email , @RequestParam String token){
+    public ResponseEntity<List<PostOutput>> getAllPosts(@RequestParam String email , @RequestParam String token){
         HttpStatus status;
-        List<Post> postList = null;
+        List<PostOutput> postList = null;
         if(authService.authenticate(email,token))
         {
             postList = postService.getAllPosts(token);
@@ -58,7 +59,7 @@ public class PostController {
             status = HttpStatus.FORBIDDEN;
         }
 
-        return new ResponseEntity<List<Post>>(postList , status);
+        return new ResponseEntity<List<PostOutput>>(postList , status);
     }
 
     @GetMapping("/{postId}/likeCount")
