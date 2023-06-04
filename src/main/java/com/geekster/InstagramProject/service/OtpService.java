@@ -77,8 +77,8 @@ public class OtpService {
 
     }
 
-    private static final String EMAIL_USERNAME = "divyahirve2511@gmail.com";
-    private static final String EMAIL_PASSWORD = "fskkdbsauefujlnk";
+    private static final String EMAIL_USERNAME = "ajinkya12051999@gmail.com";
+    private static final String EMAIL_PASSWORD = "mnopqsxcvtefuyynwxyz";
 
 
     private String generateOTP() {

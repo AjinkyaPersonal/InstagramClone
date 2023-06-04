@@ -6,6 +6,7 @@ import com.geekster.InstagramProject.dto.SignUpOutput;
 import com.geekster.InstagramProject.model.PostLike;
 import com.geekster.InstagramProject.model.User;
 import com.geekster.InstagramProject.repo.IFollowingRepo;
+import com.geekster.InstagramProject.service.OtpAuthenticationService;
 import com.geekster.InstagramProject.service.TokenService;
 import com.geekster.InstagramProject.service.UserService;
 import jakarta.validation.Valid;
@@ -27,20 +28,35 @@ public class UserController {
     @Autowired
     IFollowingRepo followRepo;
 
+    @Autowired
+    OtpAuthenticationService otpAuthenticationService;
+
     @PostMapping("/signup")
-    public SignUpOutput signUp(@Valid @RequestBody User signUpDto){
-        return userService.signUp(signUpDto);
+    public ResponseEntity<SignUpOutput> signUp(@Valid @RequestBody User signUpDto, @RequestParam String token){
+
+        HttpStatus status;
+        SignUpOutput output = null;
+        if ( otpAuthenticationService.authenticateToken(signUpDto, token) ) {
+            output = userService.signUp(signUpDto);
+            status = HttpStatus.OK;
+        }
+        else {
+            status = HttpStatus.BAD_REQUEST;
+        }
+        return new ResponseEntity<>(output, status);
+
     }
 
     @PostMapping("/signin")
     public SignInOutput signIn(@Valid @RequestBody SignInInput signInDto){
+
         return userService.signIn(signInDto);
     }
 
     @DeleteMapping("/signout")
     public ResponseEntity<String> signOut(@RequestParam String email , @RequestParam String token){
         HttpStatus status;
-        String msg=null;
+        String msg;
 
         if(authService.authenticate(email,token))
         {
@@ -55,20 +71,20 @@ public class UserController {
             status = HttpStatus.FORBIDDEN;
         }
 
-        return new ResponseEntity<String>(msg , status);
+        return new ResponseEntity<>(msg, status);
     }
 
     @PutMapping()
     public ResponseEntity<String> updateUser(@RequestParam String email , @RequestParam String token , @RequestBody User user){
         HttpStatus status;
-        String msg=null;
+        String msg;
 
         if(authService.authenticate(email,token))
         {
             try{
                 userService.updateUser(user , token);
                 status = HttpStatus.OK;
-                msg = "User updated sucessfully";
+                msg = "User updated successfully";
             }catch (Exception e){
                 msg = "Enter valid information";
                 status = HttpStatus.BAD_REQUEST;
@@ -81,7 +97,7 @@ public class UserController {
             status = HttpStatus.FORBIDDEN;
         }
 
-        return new ResponseEntity<String>(msg , status);
+        return new ResponseEntity<>(msg, status);
     }
 
 
